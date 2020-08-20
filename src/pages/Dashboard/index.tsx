@@ -59,22 +59,13 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     async function loadFoods(): Promise<void> {
-      const registeredFoods = await api.get('/foods');
-      let foodsToShow;
-      if (selectedCategory) {
-        foodsToShow = registeredFoods.data.filter(
-          food => food.category === selectedCategory,
-        );
-      } else {
-        foodsToShow = registeredFoods.data;
-      }
-
-      if (searchValue) {
-        foodsToShow = foodsToShow.filter(food =>
-          food.name.toLowerCase().includes(searchValue.toLowerCase()),
-        );
-      }
-      setFoods(foodsToShow);
+      const registeredFoods = await api.get('/foods', {
+        params: {
+          category_like: selectedCategory,
+          name_like: searchValue,
+        },
+      });
+      setFoods(registeredFoods.data);
     }
 
     loadFoods();
